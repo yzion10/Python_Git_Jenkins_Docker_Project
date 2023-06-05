@@ -1,12 +1,13 @@
 import requests
 from db_connector import DBConnector
+import clean_environment
 
 # return (true/false) if the value is in the args.
 def IsIn(value, *args):
     return value in args
 
 def getUrl():
-    return 'http://127.0.0.1:5000/users/1'
+    return 'http://0.0.0.0:5000/users/1'
 
 def getUserData():
     userData = {'user_name': 'yosi1'}
@@ -18,6 +19,14 @@ Err500 = 500
 
 # *************************************************************************************
 
+def writeToLog(text):
+    with open('/app/logs/flasklog.txt', 'a') as f:
+        f.write(text + '\n')
+
+if __name__ == "__main__":
+    print('\n*********** Running tests on the Dockerized app... ***********\n')
+    writeToLog('\n*********** Running tests on the Dockerized app... ***********\n')
+
 # 1
 # POST - test a post of a new user data with the REST API method
 def postRequest(api_url, userData):
@@ -28,17 +37,21 @@ def postRequest(api_url, userData):
         msg = f'user {userName} created successfully \n\n' \
               f'this is the json output:\n{res.json()}'
         print(msg)
+        writeToLog(msg)
     elif IsIn(res.status_code, Err500, Err400):
         reason = res.json()['reason']
         msg = f'POST failed with reason: {reason} \n\n' \
               f'this is the json output:\n{res.json()}'
         print(msg)
+        writeToLog(msg)
     else:
         print(f'POST failed with status code {res.status_code}')
+        writeToLog(f'POST failed with status code {res.status_code}')
     return userName
 
 if __name__ == "__main__":
     print('\n*********** postRequest ***********\n')
+    writeToLog('\n*********** postRequest ***********\n')
     postRequest(getUrl(), getUserData())
 
 # *************************************************************************************
@@ -55,21 +68,26 @@ def getRequest(api_url, apiUserName):
             msg = f'result user name: {userName} \napiUserName: {apiUserName} \n\n' \
                   f'this is the json output:\n{getRes.json()}'
             print(msg)
+            writeToLog(msg)
         else:
             msg = f'result user name: {userName} \napiUserName: {apiUserName} \n' \
                   f'result user name dosent match the apiUserName'
             print(msg)
+            writeToLog(msg)
     elif getRes.status_code == Err500:
         reason = getRes.json()['reason']
         msg = f'GET failed with reason: {reason} \n\n' \
               f'this is the json output:\n{getRes.json()}'
         print(msg)
+        writeToLog(msg)
     else:
          print(f'GET failed with status code {getRes.status_code}')
+         writeToLog(f'GET failed with status code {getRes.status_code}')
     return userName
 
 if __name__ == "__main__":
     print('\n*********** getRequest ***********\n')
+    writeToLog('\n*********** getRequest ***********\n')
     getRequest(getUrl(), 'yosi1')
 
 # *************************************************************************************
@@ -92,13 +110,17 @@ def checkPostUserStoredInDB(userID, apiUserName):
     if dbUserName is not None:
         if (dbUserName == apiUserName):
             print(msg + 'names are equal')
+            writeToLog(msg + 'names are equal')
         else:
             print(msg + 'names are NOT equal')
+            writeToLog(msg + 'names are NOT equal')
     else:
         print(f'no such ID: {userID}')
+        writeToLog(f'no such ID: {userID}')
 
 if __name__ == "__main__":
     print('\n*********** checkPostUserStoredInDB ***********\n')
+    writeToLog('\n*********** checkPostUserStoredInDB ***********\n')
     checkPostUserStoredInDB('1', 'yosi1')
 
 # *************************************************************************************
@@ -113,18 +135,21 @@ def putRequest(api_url, userData):
         msg = f'user {userName} updated successfully \n\n' \
               f'this is the json output:\n{putRes.json()}'
         print(msg)
+        writeToLog(msg)
     elif IsIn(putRes.status_code, Err500, Err400):
         reason = putRes.json()['reason']
         msg = f'PUT failed with reason: {reason} \n\n' \
               f'this is the json output:\n{putRes.json()}'
         print(msg)
+        writeToLog(msg)
     else:
         print(f'PUT failed with status code {putRes.status_code}')
+        writeToLog(f'PUT failed with status code {putRes.status_code}')
     return userName
-
 
 if __name__ == "__main__":
     print('\n*********** putRequest ***********\n')
+    writeToLog('\n*********** putRequest ***********\n')
     putRequest(getUrl(), getUserData())
 
 # *************************************************************************************
@@ -140,18 +165,24 @@ def deleteRequest(api_url):
         msg = f'user ID: {userID} deleted successfully \n\n' \
               f'this is the json output:\n{deleteRes.json()}'
         print(msg)
+        writeToLog(msg)
     elif deleteRes.status_code == Err500:
         reason = deleteRes.json()['reason']
         msg = f'DELETE failed with reason: {reason} \n\n' \
               f'this is the json output:\n{deleteRes.json()}'
         print(msg)
+        writeToLog(msg)
     else:
          print(f'DELETE failed with status code {deleteRes.status_code}')
+         writeToLog(f'DELETE failed with status code {deleteRes.status_code}')
     return userID
 
 if __name__ == "__main__":
     print('\n*********** deleteRequest ***********\n')
+    writeToLog('\n*********** deleteRequest ***********\n')
     deleteRequest(getUrl())
 
-# print('\n*********** stopRestServer ***********\n')
-# clean_environment.stopRestServer()
+if __name__ == "__main__":
+    print('\n*********** stopRestServer ***********\n')
+    writeToLog('\n*********** stopRestServer ***********\n')
+    clean_environment.stopRestServer()
