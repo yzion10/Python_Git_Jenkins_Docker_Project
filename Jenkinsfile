@@ -9,7 +9,7 @@ pipeline
     environment
     {
         JOB1_SUCCESS = false
-        imageTag = env.BUILD_NUMBER
+        imageTag = '${env.BUILD_NUMBER}'
 
         rest_app = 'rest_app.py'
         backend_testing = 'backend_testing.py'
