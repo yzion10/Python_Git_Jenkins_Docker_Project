@@ -112,7 +112,7 @@ pipeline
             }
         }
 
-        stage(${env.build_Image})
+        stage('${env.build_Image}')
         {
             steps
             {
@@ -123,7 +123,7 @@ pipeline
             }
         }
 
-        stage(${env.push_Image})
+        stage('${env.push_Image}')
         {
             steps
             {
@@ -134,7 +134,7 @@ pipeline
             }
         }
 
-        stage(${env.set_compose_version})
+        stage('${env.set_compose_version}')
         {
             steps
             {
@@ -145,7 +145,7 @@ pipeline
             }
         }
 
-        stage(${env.run_docker_compose})
+        stage('${env.run_docker_compose}')
         {
             steps
             {
@@ -158,7 +158,7 @@ pipeline
             }
         }
 
-        stage(${env.test_dockerized_app})
+        stage('${env.test_dockerized_app}')
         {
             steps
             {
@@ -171,7 +171,7 @@ pipeline
             }
         }
 
-        stage(${env.clean_container})
+        stage('${env.clean_container}')
         {
             steps
             {
