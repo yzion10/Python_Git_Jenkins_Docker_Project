@@ -48,7 +48,7 @@ pipeline
 
                     try
                     {
-                        bat "start /min python.exe ${env.rest_app}"
+                        bat "start /min python ${env.rest_app}"
                         isSuccess = true
                     }
                     catch (Exception e)
@@ -78,7 +78,7 @@ pipeline
                 {
                     try
                     {
-                        bat "python.exe ${env.backend_testing}"
+                        bat "python ${env.backend_testing}"
                     }
                     catch (Exception e)
                     {
@@ -102,7 +102,7 @@ pipeline
                 {
                     try
                     {
-                        bat "python.exe ${env.clean_environemnt}"
+                        bat "python ${env.clean_environemnt}"
                     }
                     catch (Exception e)
                     {
@@ -166,7 +166,7 @@ pipeline
                 {
                     bat 'pip install requests'
                     bat 'pip install pymysql'
-                    bat 'python.exe docker_backend_testing.py'
+                    bat 'python docker_backend_testing.py'
                 }
             }
         }
