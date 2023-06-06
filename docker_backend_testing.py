@@ -195,4 +195,6 @@ if __name__ == "__main__":
 if __name__ == "__main__":
     print('\n*********** stopRestServer ***********\n')
     writeToLog('\n*********** stopRestServer ***********\n')
-    clean_environment.stopRestServer()
+    res = clean_environment.stopRestServer()
+    print(res)
+    writeToLog(res)
