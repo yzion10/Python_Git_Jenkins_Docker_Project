@@ -1,3 +1,4 @@
+
 pipeline
 {
     options
@@ -8,6 +9,7 @@ pipeline
     environment
     {
         JOB1_SUCCESS = false
+        imageTag = env.BUILD_NUMBER
 
         rest_app = 'rest_app.py'
         backend_testing = 'backend_testing.py'
@@ -36,7 +38,7 @@ pipeline
                 git 'https://github.com/yzion10/Python_Git_Jenkins_Docker_Project.git'
             }
         }
-        stage('Run ' + ${env.rest_app})
+        stage('Run ${env.rest_app}')
         {
             steps
             {
@@ -61,7 +63,7 @@ pipeline
                 }
             }
         }
-        stage('Run ' + ${env.backend_testing})
+        stage('Run ${env.backend_testing}')
         {
             when
             {
@@ -85,7 +87,7 @@ pipeline
                 }
             }
         }
-        stage('Run ' + ${env.clean_environemnt})
+        stage('Run ${env.clean_environemnt}')
         {
            when
             {
@@ -116,7 +118,7 @@ pipeline
             {
                 script
                 {
-                    bat 'docker build -t yzion10/myapp .'
+                    bat 'docker build -t yzion10/dockerApp:${imageTag} .'
                 }
             }
         }
@@ -127,7 +129,7 @@ pipeline
             {
                 script
                 {
-                    bat 'docker push yzion10/myapp'
+                    bat 'docker push yzion10/dockerApp:${imageTag}'
                 }
             }
         }
@@ -138,7 +140,7 @@ pipeline
             {
                 script
                 {
-                    bat 'echo IMAGE_TAG=${BUILD_NUMBER} > .env'
+                    bat 'echo IMAGE_TAG=${imageTag} > .env'
                 }
             }
         }
@@ -149,7 +151,9 @@ pipeline
             {
                 script
                 {
-                    bat 'docker-compose up -d'
+                    // Run the container and pass the .env file to get from him the IMAGE_TAG
+                    bat 'docker-compose up -d --build --env-file .env'
+                    //bat 'docker-compose up -d'
                 }
             }
         }
@@ -172,13 +176,15 @@ pipeline
                 script
                 {
                     bat 'docker-compose down'
-                    bat 'docker image rmi yzion10/myapp:${BUILD_NUMBER}'
+                    bat 'docker image rmi yzion10/dockerApp:${imageTag}'
                 }
             }
         }
     }
-    post {
-        failure {
+    post
+    {
+        failure
+        {
             emailext subject: 'Pipeline Failed',
                      body: 'The Jenkins pipeline failed (Python_Git_Jenkins_Docker_Project)',
                      to: 'yzion10@gmail.com',
