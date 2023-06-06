@@ -1,13 +1,14 @@
 import requests
 from db_connector import DBConnector
 import clean_environment
+import os
 
 # return (true/false) if the value is in the args.
 def IsIn(value, *args):
     return value in args
 
 def getUrl():
-    return 'http://0.0.0.0:5000/users/1'
+    return 'http://127.0.0.1:5000/users/1'
 
 def getUserData():
     userData = {'user_name': 'yosi1'}
@@ -17,10 +18,19 @@ Err200 = 200
 Err400 = 400
 Err500 = 500
 
+log_file_path = 'app/logs/flasklog.txt'
+
 # *************************************************************************************
 
+# Create the directory if it doesn't exist
+os.makedirs(os.path.dirname(log_file_path), exist_ok=True)
+
+# remove the log file if exist
+if os.path.exists(log_file_path):
+    os.remove(log_file_path)
+
 def writeToLog(text):
-    with open('/app/logs/flasklog.txt', 'a') as f:
+    with open(log_file_path, 'a') as f:
         f.write(text + '\n')
 
 if __name__ == "__main__":

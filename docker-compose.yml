@@ -1,7 +1,7 @@
 version: '3'
 services:
   app:
-    image: yzion10/dockerApp:${IMAGE_TAG}
+    image: yzion10/dockerapp:${IMAGE_TAG}
     ports:
       - 5000:5000
     volumes:

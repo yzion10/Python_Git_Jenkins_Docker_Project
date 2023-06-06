@@ -118,7 +118,7 @@ pipeline
             {
                 script
                 {
-                    bat 'docker build -t yzion10/dockerApp:${imageTag} .'
+                    bat 'docker build -t yzion10/dockerapp:${imageTag} .'
                 }
             }
         }
@@ -129,7 +129,7 @@ pipeline
             {
                 script
                 {
-                    bat 'docker push yzion10/dockerApp:${imageTag}'
+                    bat 'docker push yzion10/dockerapp:${imageTag}'
                 }
             }
         }
@@ -151,8 +151,8 @@ pipeline
             {
                 script
                 {
-                    // Run the container and pass the .env file to get from him the IMAGE_TAG
-                    bat 'docker-compose up -d --build --env-file .env'
+                    // Run the container using the .env file to get from him the IMAGE_TAG
+                    bat 'docker-compose -f docker-compose.yml up -d --build'
                     //bat 'docker-compose up -d'
                 }
             }
@@ -164,6 +164,8 @@ pipeline
             {
                 script
                 {
+                    bat 'pip install requests'
+                    bat 'pip install pymysql'
                     bat 'python.exe docker_backend_testing.py'
                 }
             }
@@ -176,7 +178,7 @@ pipeline
                 script
                 {
                     bat 'docker-compose down'
-                    bat 'docker image rmi yzion10/dockerApp:${imageTag}'
+                    bat 'docker image rmi yzion10/dockerapp:${imageTag}'
                 }
             }
         }
