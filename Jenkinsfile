@@ -13,7 +13,7 @@ pipeline
 
         rest_app = 'rest_app.py'
         backend_testing = 'backend_testing.py'
-        clean_environemnt = 'clean_environemnt.py'
+        clean_environemnt = 'clean_environment.py'
         build_Image = 'Build Docker image - locally'
         push_Image = 'Push Docker image - to DockerHub'
         set_compose_version = 'Set compose image version'
