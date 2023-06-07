@@ -1,25 +1,14 @@
+def JOB1_SUCCESS = false
+def imageTag = env.BUILD_NUMBER
+def rest_app = 'rest_app.py'
+def backend_testing = 'backend_testing.py'
+def clean_environment = 'clean_environment.py'
 
 pipeline
 {
     options
     {
         buildDiscarder(logRotator(numToKeepStr: '20', daysToKeepStr: '5'))
-    }
-
-    environment
-    {
-        JOB1_SUCCESS = false
-        imageTag = '${env.BUILD_NUMBER}'
-
-        rest_app = 'rest_app.py'
-        backend_testing = 'backend_testing.py'
-        clean_environemnt = 'clean_environment.py'
-        build_Image = 'Build Docker image - locally'
-        push_Image = 'Push Docker image - to DockerHub'
-        set_compose_version = 'Set compose image version'
-        run_docker_compose = 'Run docker-compose up -d'
-        test_dockerized_app = 'Test dockerized app - using docker_backend_testing.py'
-        clean_container = 'Clean Container environment'
     }
 
     agent any
@@ -38,7 +27,7 @@ pipeline
                 git 'https://github.com/yzion10/Python_Git_Jenkins_Docker_Project.git'
             }
         }
-        stage('Run ${env.rest_app}')
+        stage('Run rest_app.py')
         {
             steps
             {
@@ -48,28 +37,28 @@ pipeline
 
                     try
                     {
-                        bat "start /min python ${env.rest_app}"
+                        bat "start /min python $rest_app"
                         isSuccess = true
                     }
                     catch (Exception e)
                     {
                         isSuccess = false
-                        echo "${env.rest_app} Error: ${e.getMessage()}"
+                        echo "$rest_app Error: ${e.getMessage()}"
                     }
                     finally
                     {
-                        env.JOB1_SUCCESS = isSuccess
+                        JOB1_SUCCESS = isSuccess
                     }
                 }
             }
         }
-        stage('Run ${env.backend_testing}')
+        stage('Run backend_testing.py')
         {
             when
             {
                 expression
                 {
-                    env.JOB1_SUCCESS
+                    JOB1_SUCCESS
                 }
             }
             steps
@@ -78,22 +67,22 @@ pipeline
                 {
                     try
                     {
-                        bat "python ${env.backend_testing}"
+                        bat "python $backend_testing"
                     }
                     catch (Exception e)
                     {
-                        echo "${env.backend_testing} Error: ${e.getMessage()}"
+                        echo "$backend_testing Error: ${e.getMessage()}"
                     }
                 }
             }
         }
-        stage('Run ${env.clean_environemnt}')
+        stage('Run clean_environment.py')
         {
            when
             {
                 expression
                 {
-                    env.JOB1_SUCCESS
+                    JOB1_SUCCESS
                 }
             }
             steps
@@ -102,63 +91,62 @@ pipeline
                 {
                     try
                     {
-                        bat "python ${env.clean_environemnt}"
+                        bat "python $clean_environment"
                     }
                     catch (Exception e)
                     {
-                        echo "${env.clean_environemnt} Error: ${e.getMessage()}"
+                        echo "$clean_environment Error: ${e.getMessage()}"
                     }
                 }
             }
         }
 
-        stage('${env.build_Image}')
+        stage('build_Image_locally')
         {
             steps
             {
                 script
                 {
-                    bat 'docker build -t yzion10/dockerapp:${imageTag} .'
+                    bat "docker build -t yzion10/dockerapp:${imageTag} ."
                 }
             }
         }
 
-        stage('${env.push_Image}')
+        stage('push_Image_ToDockerHub')
         {
             steps
             {
                 script
                 {
-                    bat 'docker push yzion10/dockerapp:${imageTag}'
+                    bat "docker push yzion10/dockerapp:${imageTag}"
                 }
             }
         }
 
-        stage('${env.set_compose_version}')
+        stage('set_compose_version')
         {
             steps
             {
                 script
                 {
-                    bat 'echo IMAGE_TAG=${imageTag} > .env'
+                    bat "echo IMAGE_TAG=${imageTag} > .env"
                 }
             }
         }
 
-        stage('${env.run_docker_compose}')
+        stage('Run docker_compose')
         {
             steps
             {
                 script
                 {
                     // Run the container using the .env file to get from him the IMAGE_TAG
-                    bat 'docker-compose -f docker-compose.yml up -d --build'
-                    //bat 'docker-compose up -d'
+                    bat "docker-compose -f docker-compose.yml up -d --build"
                 }
             }
         }
 
-        stage('${env.test_dockerized_app}')
+        stage('Test_dockerized_app')
         {
             steps
             {
@@ -171,14 +159,14 @@ pipeline
             }
         }
 
-        stage('${env.clean_container}')
+        stage('Clean_container')
         {
             steps
             {
                 script
                 {
                     bat 'docker-compose down'
-                    bat 'docker image rmi yzion10/dockerapp:${imageTag}'
+                    bat "docker image rmi yzion10/dockerapp:${imageTag}"
                 }
             }
         }
