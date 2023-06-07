@@ -1,4 +1,5 @@
-FROM python:3.7-alpine
+#FROM python:3.7-alpine
+FROM faucet/python3
 WORKDIR /app
 COPY rest_app.py /app
 COPY db_connector.py /app
