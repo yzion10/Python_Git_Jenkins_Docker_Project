@@ -46,13 +46,13 @@ jenkinsfile - A jenkins pipeline script (in groovy) which connect to git reposit
 10. Clean container - will call docker-compose down and delete local image
 
 *************************************************************************************************************************
-A simple batch commands to test this project locally on cmd (without pipeline):
-docker build -t yzion10/dockerapp:1 .
-docker push yzion10/dockerapp:1
-echo IMAGE_TAG=1 > .env
-docker-compose -f docker-compose.yml up -d --build
-python docker_backend_testing.py
-docker-compose down
-docker image rmi yzion10/dockerapp:1
+A simple batch commands to test this project locally (without pipeline) on cmd. (run it according to this steps):
+1. docker build -t yzion10/dockerapp:1 .
+2. docker push yzion10/dockerapp:1
+3. echo IMAGE_TAG=1 > .env
+4. docker-compose -f docker-compose.yml up -d --build
+5. python docker_backend_testing.py
+6. docker-compose down
+7. docker image rmi yzion10/dockerapp:1
 *************************************************************************************************************************
 
