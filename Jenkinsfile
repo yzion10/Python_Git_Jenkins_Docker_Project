@@ -118,14 +118,13 @@ pipeline
             {
                 script
                 {
-                    // Not working
-                    //docker.withRegistry('', 'docker_hub')
-                    //{
-                    //    def image = docker.image("yzion10/dockerapp:${imageTag}")
-                    //    image.push()
-                    //}
+                    docker.withRegistry('', 'docker_hub')
+                    {
+                        def image = docker.image("yzion10/dockerapp:${imageTag}")
+                        image.push()
+                    }
 
-                    bat "docker push yzion10/dockerapp:${imageTag}"
+                    //bat "docker push yzion10/dockerapp:${imageTag}"
                 }
             }
         }
