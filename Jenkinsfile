@@ -159,8 +159,6 @@ pipeline
             {
                 script
                 {
-                    //bat 'pip install requests'
-                    //bat 'pip install pymysql'
                     bat 'pip install -r requirements.txt'
                     bat 'python docker_backend_testing.py'
                 }
