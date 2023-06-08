@@ -10,6 +10,9 @@ Groovy language for pipeline scripts
 
 yaml language for docker-compose.yml file
 
+**prerequisites installations before running this project:**
+python3, java, jenkins, Docker, Git
+
 **It combined the following files:**
 
 db_connector.py - This file connect to a remote MySql and implements a couple of methods (INSERT,SELECT,UPDATE,DELETE)
